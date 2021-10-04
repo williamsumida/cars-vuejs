@@ -59,7 +59,7 @@
       <div>
         <label>Ano</label>
         <input
-          type="text"
+          type="date"
           v-model="ano"
           name="ano"
           placeholder="Ano do carro"
