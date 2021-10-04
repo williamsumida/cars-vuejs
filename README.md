@@ -15,7 +15,8 @@
 ### Docker
 Exemplo para executar a aplicação com o Docker:
 ```
-docker-compose up
+docker build -t carros-vuejs .
+docker run -it -p 8080:8080 --rm carros-vuejs 
 ```
 
 ### yarn
