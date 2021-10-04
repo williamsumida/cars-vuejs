@@ -1,15 +1,59 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <Header />
+    <Button @click="toggleModal" :carros="carros" />
+    <Modal @close="toggleModal" :modalActive="modalActive">
+      <CriarCarro @close="toggleModal" :modalActive="modalActive" />
+    </Modal>
+    <Carros @delete-carro="deleteCarro" :carros="carros" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import axios from "axios";
+import Header from "./components/Header";
+import Button from "./components/CriarCarroButton";
+import Carros from "./components/Carros";
+import Modal from "./components/Modal";
+import CriarCarro from "./components/CriarCarro";
+import { ref } from "vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    Header,
+    Button,
+    Carros,
+    Modal,
+    CriarCarro,
+  },
+  setup() {
+    const modalActive = ref(false);
+    const toggleModal = () => {
+      modalActive.value = !modalActive.value;
+    };
+    return { modalActive, toggleModal };
+  },
+  data() {
+    return {
+      carros: [],
+    };
+  },
+  methods: {
+    deleteCarro(id, nome) {
+      if (confirm(`Deseja deletar ${nome}?`)) {
+        axios.delete(`http://localhost:8000/carro/${id}`);
+        axios
+          .get("http://localhost:8000/carro")
+          .then((response) => (this.carros = response.data));
+        location.reload();
+      }
+    },
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8000/carro")
+      .then((response) => (this.carros = response.data));
   },
 };
 </script>
